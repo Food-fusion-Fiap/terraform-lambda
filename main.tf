@@ -4,7 +4,7 @@ resource "aws_lambda_function" "lambda_auth" {
   role          = aws_iam_role.lambda_role.arn
   handler       = "app/index.handler"
   runtime       = "nodejs20.x"
-  timeout       = 10
+  timeout       = 5
   memory_size   = 128
 
   environment {
