@@ -1,0 +1,87 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - master
+      
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Extract repository information
+        id: extract_repo_info
+        run: |
+          echo "::set-output name=repo_owner::${{ github.event.client_payload.owner }}"
+          echo "::set-output name=repo_name::${{ github.event.client_payload.repository }}"
+
+      - name: Clone repository
+        run: |
+          git clone https://github.com/${{ steps.extract_repo_info.outputs.repo_owner }}/${{ steps.extract_repo_info.outputs.repo_name }}
+          cd ${{ steps.extract_repo_info.outputs.repo_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --production
+        working-directory: lambda
+
+      - name: Build TypeScript
+        run: npm run build
+        working-directory: lambda
+        
+      - name: Create ZIP file
+        run: zip -r lambda_function.zip .
+        working-directory: lambda
+
+      - name: Deploy Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name food-fusion-auth \
+            --zip-file fileb://lambda/lambda_function.zip \
+            --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Init
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: terraform
+
+  terraform_destroy:
+    name: 'Terraform Destroy'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.confirm == 'yes'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.8.2
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Destroy
+      run: terraform destroy -auto-approve
