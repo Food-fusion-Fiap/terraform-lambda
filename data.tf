@@ -1,3 +1,10 @@
+data "aws_vpc" "main" {
+  filter {
+    name   = "tag:Name"
+    values = ["main"]
+  }
+}
+
 data "aws_subnet" "public_subnet" {
   filter {
     name   = "tag:Name"
