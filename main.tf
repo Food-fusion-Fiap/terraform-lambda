@@ -21,7 +21,11 @@ resource "aws_lambda_function" "lambda_auth" {
 
   environment {
     variables = {
-      NODE_ENV = "production"
+      NODE_ENV          = "production"
+      RDS_ENDPOINT      = data.aws_ssm_parameter.db_host.value
+      RDS_DATABASE_NAME = data.aws_ssm_parameter.db_name.value
+      RDS_USER          = data.aws_ssm_parameter.db_username.value
+      RDS_PASSWORD      = data.aws_ssm_parameter.db_password.value
     }
   }
 
@@ -87,52 +91,7 @@ resource "aws_iam_policy_attachment" "lambda_policy_attachment" {
 resource "aws_iam_policy_attachment" "lambda_rds_policy" {
   name       = "lambda_rds_policy"
   roles      = [aws_iam_role.lambda_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
-}
-
-/**
-  * AWS IAM Policy for SSM Access
-  *
-  * This resource block defines an AWS IAM policy that allows Lambda functions to access
-  * the SSM parameter specified by the `resource` attribute.
-  */
-resource "aws_iam_policy" "ssm_access_policy" {
-  name        = "SSMAccessPolicy"
-  description = "Allows Lambda function to access SSM Parameter"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          # "ssm:Describe*",
-          #       "ssm:Get*",
-          #       "ssm:List*"
-          "ssm:GetParameters",
-          "ssm:GetParameter"
-        ],
-        Resource = [
-          "arn:aws:ssm:us-east-1:616605573845:parameter/food_fusion/db_host",
-          "arn:aws:ssm:us-east-1:616605573845:parameter/food_fusion/db_name",
-          "arn:aws:ssm:us-east-1:616605573845:parameter/food_fusion/db_username",
-          "arn:aws:ssm:us-east-1:616605573845:parameter/food_fusion/db_password"
-        ]
-      }
-    ]
-  })
-}
-
-/**
-  * Attach the AWS IAM policy to the Lambda function's role.
-  *
-  * This resource block attaches the AWS IAM policy specified by the `policy_arn` attribute
-  * to the IAM role associated with the Lambda function. The `name` attribute is used to
-  * provide a unique name for this policy attachment resource.
-  */
-resource "aws_iam_role_policy_attachment" "lambda_ssm_access" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.ssm_access_policy.arn
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess"
 }
 
 /**
