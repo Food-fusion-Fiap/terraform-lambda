@@ -54,7 +54,7 @@ jobs:
         
       - name: Create ZIP file
         run: zip -r lambda_function.zip .
-        working-directory: lambda-auth
+        working-directory: lambda-auth/dist
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
