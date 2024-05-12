@@ -92,7 +92,7 @@ resource "aws_iam_policy" "ssm_policy" {
           "ssm:GetParameters",
           "ssm:GetParameter"
         ],
-        Resource = "/${var.project_name}/*"
+        Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.project_name}/*"
       }
     ]
   })
