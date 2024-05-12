@@ -18,7 +18,7 @@ jobs:
   terraform_apply:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm != 'yes')
+    #if: github.event_name != 'workflow_dispatch' || github.event.inputs.confirm != 'yes'
 
     steps:
       - name: Checkout
