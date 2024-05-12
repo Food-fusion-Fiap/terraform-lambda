@@ -20,7 +20,6 @@ jobs:
       - name: Clone repository
         run: |
           git clone https://github.com/Food-fusion-Fiap/lambda-auth
-          cd lambda-auth
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -29,15 +28,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install --production
-        working-directory: lambda
+        working-directory: lambda-auth
 
       - name: Build TypeScript
         run: npm run build
-        working-directory: lambda
+        working-directory: lambda-auth
         
       - name: Create ZIP file
         run: zip -r lambda_function.zip .
-        working-directory: lambda
+        working-directory: lambda-auth
 
       - name: Deploy Lambda
         run: |
