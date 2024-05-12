@@ -18,7 +18,6 @@ jobs:
   terraform_apply:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
 
     steps:
       - name: Checkout
