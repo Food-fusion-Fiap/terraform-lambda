@@ -58,6 +58,8 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        env:
+          TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
 
   terraform_destroy:
     name: 'Terraform Destroy'
