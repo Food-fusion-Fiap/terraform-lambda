@@ -11,7 +11,7 @@ resource "aws_security_group" "lambda_auth_sg" {
 }
 
 resource "aws_lambda_function" "lambda_auth" {
-  filename      = "lambda-auth/lambda_function.zip"
+  filename      = "lambda-auth/dist/lambda_function.zip"
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "app/index.handler"
