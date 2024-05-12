@@ -16,17 +16,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Extract repository information
-        id: extract_repo_info
-        run: |
-          echo "::set-output name=repo_owner::${{ github.event.client_payload.owner }}"
-          echo "::set-output name=repo_name::${{ github.event.client_payload.repository }}"
 
       - name: Clone repository
         run: |
-          git clone https://github.com/${{ steps.extract_repo_info.outputs.repo_owner }}/${{ steps.extract_repo_info.outputs.repo_name }}
-          cd ${{ steps.extract_repo_info.outputs.repo_name }}
+          git clone https://github.com/Food-fusion-Fiap/lambda-auth
+          cd lambda-auth
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
