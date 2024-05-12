@@ -1,3 +1,9 @@
+resource "aws_ssm_parameter" "jwt_secret" {
+  name  = "/${var.project_name}/jwt_secret"
+  value = var.jwt_secret
+  type  = "SecureString" # Important to store the password securely in SSM
+}
+
 resource "aws_security_group" "lambda_auth_sg" {
   name   = "lambda_auth_sg"
   vpc_id = data.aws_vpc.main.id
@@ -26,6 +32,7 @@ resource "aws_lambda_function" "lambda_auth" {
       RDS_DATABASE_NAME = data.aws_ssm_parameter.db_name.value
       RDS_USER          = data.aws_ssm_parameter.db_username.value
       RDS_PASSWORD      = data.aws_ssm_parameter.db_password.value
+      JWT_SECRET        = var.jwt_secret
     }
   }
 

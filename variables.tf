@@ -3,6 +3,11 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "project_name" {
+  description = "The name of the project"
+  default     = "food_fusion"
+}
+
 variable "lambda_function_name" {
   description = "Nome da função Lambda"
   default     = "food-fusion-auth"
@@ -16,4 +21,9 @@ variable "lambda_role_name" {
 variable "lambda_policy_attachment_name" {
   description = "Nome da política de anexo da função Lambda"
   default     = "food-fusion-auth-policy-attachment"
+}
+
+variable "jwt_secret" {
+  description = "Chave secreta JWT"
+  default     = ""
 }
