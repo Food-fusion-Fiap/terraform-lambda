@@ -20,7 +20,7 @@ resource "aws_lambda_function" "lambda_auth" {
   filename      = "lambda-auth/dist/lambda_function.zip"
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
-  handler       = "app/index.handler"
+  handler       = "app/authenticate.handler"
   runtime       = "nodejs20.x"
   timeout       = 5
   memory_size   = 128
