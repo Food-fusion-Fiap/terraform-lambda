@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "terraform-state-fiap-group-18"
+    bucket = "terraform-github-action"
     key    = "prod/terraform-lambda.tfstate"
     region = "us-east-1"
   }
