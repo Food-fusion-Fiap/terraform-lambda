@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "lambda_authorizer" {
   filename      = "lambda-auth/dist/lambda_function.zip"
-  source_code_hash = filebase64("lambda-auth/dist/lambda_function.zip")
+  #source_code_hash = filebase64("lambda-auth/dist/lambda_function.zip")
   function_name = "food-fusion-authorizer"
   role          = aws_iam_role.lambda_role.arn
   handler       = "app/authorizer.handler"
@@ -15,7 +15,7 @@ resource "aws_lambda_function" "lambda_authorizer" {
   }
 
   vpc_config {
-    subnet_ids         = [local.aws_public_subnet_id, local.aws_private_subnet_id]
+    subnet_ids         = [local.aws_private_subnet_id]
     security_group_ids = [aws_security_group.lambda_auth_sg.id]
   }
 }

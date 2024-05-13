@@ -18,6 +18,7 @@ resource "aws_security_group" "lambda_auth_sg" {
 
 resource "aws_lambda_function" "lambda_auth" {
   filename      = "lambda-auth/dist/lambda_function.zip"
+  #source_code_hash = filebase64("lambda-auth/dist/lambda_function.zip")
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "app/authenticate.handler"
@@ -32,7 +33,7 @@ resource "aws_lambda_function" "lambda_auth" {
   }
 
   vpc_config {
-    subnet_ids         = [local.aws_public_subnet_id, local.aws_private_subnet_id]
+    subnet_ids         = [local.aws_private_subnet_id]
     security_group_ids = [aws_security_group.lambda_auth_sg.id]
   }
 }

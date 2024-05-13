@@ -29,6 +29,6 @@ variable "jwt_secret" {
 }
 
 variable "s3_bucket_name" {
-  default     = "terraform-state-fiap-group-18"
+  default     = "terraform-github-action"
 }
 
