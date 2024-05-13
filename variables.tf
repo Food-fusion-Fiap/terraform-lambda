@@ -27,3 +27,8 @@ variable "jwt_secret" {
   description = "Chave secreta JWT"
   default     = ""
 }
+
+variable "s3_bucket_name" {
+  default     = "terraform-github-action"
+}
+

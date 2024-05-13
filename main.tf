@@ -6,7 +6,7 @@ resource "aws_ssm_parameter" "jwt_secret" {
 
 resource "aws_security_group" "lambda_auth_sg" {
   name   = "lambda_auth_sg"
-  vpc_id = data.aws_vpc.main.id
+  vpc_id = local.aws_vpc_id
 
   egress {
     from_port   = 0
@@ -18,6 +18,7 @@ resource "aws_security_group" "lambda_auth_sg" {
 
 resource "aws_lambda_function" "lambda_auth" {
   filename      = "lambda-auth/dist/lambda_function.zip"
+  #source_code_hash = filebase64("lambda-auth/dist/lambda_function.zip")
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "app/authenticate.handler"
@@ -32,7 +33,7 @@ resource "aws_lambda_function" "lambda_auth" {
   }
 
   vpc_config {
-    subnet_ids         = [data.aws_subnet.private_subnet.id]
+    subnet_ids         = [local.aws_private_subnet_id]
     security_group_ids = [aws_security_group.lambda_auth_sg.id]
   }
 }
@@ -42,6 +43,6 @@ resource "aws_security_group_rule" "lambda_to_rds" {
   from_port                = 5432 # Porta do banco de dados na instância RDS
   to_port                  = 5432 # Porta do banco de dados na instância RDS
   protocol                 = "tcp"
-  security_group_id        = data.aws_security_group.rds_public_sg.id # ID da security group da RDS
+  security_group_id        = local.aws_rds_public_sg_id # ID da security group da RDS
   source_security_group_id = aws_security_group.lambda_auth_sg.id     # ID da security group da Lambda
 }

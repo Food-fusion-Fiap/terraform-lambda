@@ -1,29 +1,18 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_vpc" "main" {
-  filter {
-    name   = "tag:Name"
-    values = ["main"]
+data "terraform_remote_state" "rds_state" {
+  backend = "s3"
+
+  config = {
+    bucket = var.s3_bucket_name
+    key    = "prod/terraform-postgres.tfstate"
+    region = "us-east-1"
   }
 }
 
-data "aws_subnet" "public_subnet" {
-  filter {
-    name   = "tag:Name"
-    values = ["public_subnet"]
-  }
-}
-
-data "aws_subnet" "private_subnet" {
-  filter {
-    name   = "tag:Name"
-    values = ["private_subnet"]
-  }
-}
-
-data "aws_security_group" "rds_public_sg" {
-  filter {
-    name   = "group-name"
-    values = ["rds_public_sg"]
-  }
+locals {
+  aws_vpc_id = data.terraform_remote_state.rds_state.outputs.vpc_id
+  aws_public_subnet_id = data.terraform_remote_state.rds_state.outputs.public_subnet_id
+  aws_private_subnet_id = data.terraform_remote_state.rds_state.outputs.private_subnet_id
+  aws_rds_public_sg_id = data.terraform_remote_state.rds_state.outputs.rds_public_sg_id
 }
