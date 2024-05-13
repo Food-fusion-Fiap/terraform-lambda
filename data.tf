@@ -27,19 +27,3 @@ data "aws_security_group" "rds_public_sg" {
     values = ["rds_public_sg"]
   }
 }
-
-data "aws_ssm_parameter" "db_host" {
-  name = "/food_fusion/db_host"
-}
-
-data "aws_ssm_parameter" "db_name" {
-  name = "/food_fusion/db_name"
-}
-
-data "aws_ssm_parameter" "db_username" {
-  name = "/food_fusion/db_username"
-}
-
-data "aws_ssm_parameter" "db_password" {
-  name = "/food_fusion/db_password"
-}

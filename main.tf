@@ -27,12 +27,7 @@ resource "aws_lambda_function" "lambda_auth" {
 
   environment {
     variables = {
-      NODE_ENV          = "production"
-      RDS_ENDPOINT      = data.aws_ssm_parameter.db_host.value
-      RDS_DATABASE_NAME = data.aws_ssm_parameter.db_name.value
-      RDS_USER          = data.aws_ssm_parameter.db_username.value
-      RDS_PASSWORD      = data.aws_ssm_parameter.db_password.value
-      JWT_SECRET        = var.jwt_secret
+      NODE_ENV = "production"
     }
   }
 
@@ -154,7 +149,7 @@ resource "aws_iam_policy_attachment" "lambda_vpc_policy" {
 terraform {
   backend "s3" {
     bucket = "terraform-github-action"
-    key    = "prod/lambda-auth.tfstate"
+    key    = "prod/terraform-lambda.tfstate"
     region = "us-east-1"
   }
 }
