@@ -27,7 +27,3 @@ variable "jwt_secret" {
   description = "Chave secreta JWT"
   default     = ""
 }
-
-variable "accountId" {
-  default = "211125364272"
-}
