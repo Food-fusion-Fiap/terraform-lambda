@@ -28,6 +28,6 @@ variable "jwt_secret" {
   default     = ""
 }
 
-variable "accountId" {
-  default = "211125364272"
+variable "s3_bucket_name" {
+  default     = "terraform-state-fiap-group-18"
 }
